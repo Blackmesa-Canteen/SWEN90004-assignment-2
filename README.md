@@ -11,8 +11,9 @@ A Java replicate for the *Daisy World (Biology)* NetLogo model.
 ## 3 Build & Run
 1. Go to terminal, cd to the current project dir, execute `javac *.java` to compile;
 2. Check & modify parameter file `./params.properties` if needed;
-3. Run the model with `java Main`.
-4. See the runtime result `.csv` files from `./data` directory.
+3. Run the model with `java Main`;
+4. See the runtime result `.csv` files from `./data` directory;
+5. Execute `rm *.class` to clean compiled artifacts.
 
 ## 4 License
 This is a curriculum project from the University of Melbourne. While using codes from this repository, please follow [Academic integrity at the University of Melbourne](https://academicintegrity.unimelb.edu.au/) policy.
