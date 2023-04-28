@@ -44,13 +44,13 @@ public class GroundPatch implements Patch {
     public void onStateUpdate() {
         // if the patch has a daisy on it
         if (daisy != null) {
+
+            // if the daisy is dead, release the reference
             if (daisy.isDead()) {
                 daisy = null;
                 return;
             }
-
-            // update the daisy state
-            daisy.onStateUpdate();
+            // TODO to be continued
         }
 
         System.out.println("Ground patch ticks");

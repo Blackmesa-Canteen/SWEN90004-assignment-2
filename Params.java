@@ -14,6 +14,7 @@ public interface Params {
     // !!! param names, not param values !!!
     // please see params.properties
     String TOTAL_TICKS = "total-ticks";
+    String DELAY_MS = "delay-ms";
     String INIT_GLOBAL_TEMP = "init-global-temp";
     String WORLD_WIDTH = "world-width";
     String WORLD_HEIGHT = "world-height";
