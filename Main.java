@@ -14,6 +14,6 @@ public class Main {
         System.out.println("hello world");
         FileUtil.writeStringToResultFile("hello! 1 \n");
         FileUtil.writeStringToResultFile("hello! 2 \n");
-        System.out.println(ParamsUtil.get(Constants.DIFFUSION_RATE_OF_GROUND));
+        System.out.println(ParamsUtil.getParam(Params.DIFFUSION_RATE_OF_GROUND, Double.class));
     }
 }

@@ -33,6 +33,9 @@ public class ParamsUtil {
             props.load(inputStream);
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.format("[ERROR] Parse params.properties error [%s], " +
+                    "please check the param file.\n", e.toString());
+            System.exit(-1);
         }
     }
 
@@ -40,10 +43,43 @@ public class ParamsUtil {
      * get config filed by key
      *
      * @param key string config key
+     * @param type value type
      * @return string value for that config
      */
-    public static String get(String key) {
-        return props.getProperty(key);
+    @SuppressWarnings("unchecked")
+    public static <T> T getParam(String key, Class<T> type) {
+        String inputString = props.getProperty(key);
+        if (inputString == null) {
+            System.out.format("[ERROR] Get null param for [%s], " +
+                    "please check the param file.\n", key);
+            System.exit(-1);
+        }
+        T res = null;
+        // try cast the property
+        try {
+            if (type.isAssignableFrom(String.class)) {
+                res = (T) inputString;
+            } else if (type.isAssignableFrom(Integer.class)) {
+                res = (T) Integer.valueOf(inputString);
+            } else if (type.isAssignableFrom(Double.class)) {
+                res = (T) Double.valueOf(inputString);
+            } else if (type.isAssignableFrom(Boolean.class)) {
+                res = (T) Boolean.valueOf(inputString);
+            } else {
+                System.out.format("[ERROR] Not supported data type [%s], " +
+                        "please check the getParam codes for [%s].\n",
+                        type.getName(),
+                        key);
+                System.exit(-1);
+            }
+
+        } catch (Exception e) {
+            System.out.format("[ERROR] Get wrong data type for [%s], " +
+                    "please check the param file value type.\n", key);
+            System.exit(-1);
+        }
+
+        return res;
     }
 
     /**

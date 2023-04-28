@@ -6,7 +6,7 @@
 - Xintong LIU
 
 ## 2 Overview
-A Java replicate for the *Daisy World (Biology)* NetLogo model.
+A Java replicate for the *Daisy DaisyWorld (Biology)* NetLogo model.
 
 ## 3 Build & Run
 1. Go to terminal, cd to the current project dir, execute `javac *.java` to compile;
