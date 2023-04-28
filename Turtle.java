@@ -23,7 +23,8 @@ public interface Turtle {
     /**
      * Get current patch coordinate
      * NOTE: turtle coordinate is simplified to be the same
-     * as the located patch's.
+     * as the located patch's according to project.
+     * So deprecated for daisy
      *
      * @return Coordinate x, y pair
      */

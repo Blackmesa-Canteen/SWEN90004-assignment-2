@@ -8,7 +8,20 @@
  */
 public interface Constants {
     // daisy colors
-    enum DAISY_COLOUR { BLACK, WHITE }
+    enum Color {
+        BLACK("black"), WHITE("white");
+
+        private final String name;
+
+        private Color(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
     // parameter file name
     String PARAMETER_FILE_NAME = "params.properties";
