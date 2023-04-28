@@ -11,9 +11,9 @@ public interface Turtle {
     void onCreat();
 
     /**
-     * turtle do things in a tick
+     * turtle update state in a tick
      */
-    void tick();
+    void onStateUpdate();
 
     /**
      * turtle behaviors in finished life cycle

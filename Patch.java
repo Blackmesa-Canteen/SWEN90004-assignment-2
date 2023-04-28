@@ -13,9 +13,9 @@ public interface Patch {
     void onCreate();
 
     /**
-     * patch do things in a tick
+     * patch update state in a tick
      */
-    void tick();
+    void onStateUpdate();
 
     /**
      * get current patch coordinate

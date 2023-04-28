@@ -41,7 +41,7 @@ public class GroundPatch implements Patch {
     }
 
     @Override
-    public void tick() {
+    public void onStateUpdate() {
         // if the patch has a daisy on it
         if (daisy != null) {
             if (daisy.isDead()) {
@@ -50,7 +50,7 @@ public class GroundPatch implements Patch {
             }
 
             // update the daisy state
-            daisy.tick();
+            daisy.onStateUpdate();
         }
 
         System.out.println("Ground patch ticks");

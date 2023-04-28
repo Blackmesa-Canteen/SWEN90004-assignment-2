@@ -1,6 +1,9 @@
 /**
  * <p>
- * Constants for param names
+ * Constants for param names.
+ *
+ * Note: This interface only records parameter names, NOT values.
+ * For param values, please go to params.properties
  * </p>
  *
  * @author Xiaotian LI
@@ -8,7 +11,8 @@
  */
 public interface Params {
 
-    // param names
+    // !!! param names, not param values !!!
+    // please see params.properties
     String TOTAL_TICKS = "total-ticks";
     String INIT_GLOBAL_TEMP = "init-global-temp";
     String WORLD_WIDTH = "world-width";

@@ -51,7 +51,7 @@ public class Daisy implements Turtle{
     }
 
     @Override
-    public void tick() {
+    public void onStateUpdate() {
         if (currentAge > ParamsUtil.getParam(Params.DAISY_MAX_AGE_TICKS, Double.class)) {
             onDestroy();
         } else {
