@@ -16,7 +16,10 @@ A Java replicate for the *Daisy World (Biology)* NetLogo model.
 5. Execute `rm *.class` to clean compiled artifacts.
 
 ## 4 License
-This is a curriculum project from the University of Melbourne. While using codes from this repository, please follow [Academic integrity at the University of Melbourne](https://academicintegrity.unimelb.edu.au/) policy.
+This is a curriculum project from the University of Melbourne. 
+While using codes from this repository, 
+please follow 
+[Academic integrity at the University of Melbourne](https://academicintegrity.unimelb.edu.au/) policy.
 ```
                                  Apache License
                            Version 2.0, January 2004

@@ -29,6 +29,6 @@ public interface Constants {
     String START_PERCENTAGE_WHITES = "start-%-whites";
     String ALBEDO_OF_BLACKS = "albedo-of-blacks";
     String ALBEDO_OF_WHITES = "albedo-of-whites";
-    String ALBEDO_OF_SURFACE = "albedo-of-surface";
-    String DIFFUSION_RATE = "diffusion_rate";
+    String ALBEDO_OF_GROUND = "albedo-of-ground";
+    String DIFFUSION_RATE_OF_GROUND = "diffusion-rate-of-ground";
 }
