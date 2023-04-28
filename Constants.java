@@ -9,17 +9,23 @@
 public interface Constants {
     // daisy colors
     enum Color {
-        BLACK("black"), WHITE("white");
+        BLACK("black", 'B'), WHITE("white", 'W');
 
         private final String name;
+        private final char note;
 
-        private Color(String name) {
+        private Color(String name, char note) {
             this.name = name;
+            this.note = note;
         }
 
         @Override
         public String toString() {
             return name;
+        }
+
+        public char getNote() {
+            return note;
         }
     }
 
