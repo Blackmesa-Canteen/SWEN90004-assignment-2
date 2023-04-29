@@ -3,7 +3,7 @@
  * Constants for param names.
  *
  * Note: This interface only records parameter names, NOT values.
- * For param values, please go to params.properties
+ * For param values, please go to the file `params.properties`
  * </p>
  *
  * @author Xiaotian LI
@@ -12,7 +12,7 @@
 public interface Params {
 
     // !!! param names, not param values !!!
-    // please see params.properties
+    // For values, see `params.properties` file in project folder
     String DEBUG_MODE = "debug-mode";
     String DISPLAY_WORLD = "display-world";
     String TOTAL_TICKS = "total-ticks";
