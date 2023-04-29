@@ -71,10 +71,7 @@ public class DaisyWorld implements Observer {
     @Override
     public void onInit() {
         // create csv file head
-        String csvHead =
-                "tick-count,solar-luminosity,global-temp," +
-                        "white-population,black-population,total-population\n";
-        FileUtil.writeStringToResultFile(csvHead);
+        FileUtil.writeStringToResultFile(Constants.CSV_FILE_HEAD);
 
         // init business logic
         globalTemp = ParamsUtil.getParam(Params.INIT_GLOBAL_TEMP, Double.class);

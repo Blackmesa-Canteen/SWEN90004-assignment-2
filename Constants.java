@@ -38,6 +38,11 @@ public interface Constants {
     // csv is required for the project
     String DATA_EXTENSION = ".csv";
 
+    // CSV file head
+    String CSV_FILE_HEAD =
+            "tick-count,solar-luminosity,global-temp," +
+                    "white-population,black-population,total-population\n";
+
     // Bare ground Patch Node
     Character GROUND_PATCH_NOTE = '_';
 

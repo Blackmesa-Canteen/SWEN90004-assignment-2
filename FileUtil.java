@@ -39,10 +39,11 @@ public class FileUtil {
                 new FileOutputStream(
                         new File(targetPath),
                         true
-                )
-        )
+                ))
+
         ) {
             writer.write(string);
+            System.out.format("[SUCCESS] State info is dumped into result file: [%s]. \n\n", targetPath);
         } catch (Exception e) {
             System.out.format("[ERROR] Error occurs when writing string to result file: [%s]. \n\n", e.toString());
         }
