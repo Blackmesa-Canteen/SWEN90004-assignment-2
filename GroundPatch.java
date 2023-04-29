@@ -63,11 +63,7 @@ public class GroundPatch implements Patch {
         updateTempByDiffuse();
 
         // handle daisy sprout
-        handleDaisySprout();
-
-        // Tick the attached daisy's lifecycle along with the ground patch
-        // In short: increase the daisy age after the update tick
-        if (daisy != null) daisy.onStateUpdate();
+        checkSurvivability();
     }
 
     /**
@@ -124,53 +120,48 @@ public class GroundPatch implements Patch {
     /**
      * Handles daisy sprout, based on local temperature
      */
-    private void handleDaisySprout() {
+    private void checkSurvivability() {
         if (daisy != null) {
-            // check logic
+            // tick daisy age
+            daisy.onStateUpdate();
+            // if daisy dead, release the field
             if (daisy.isDead()) {
-                throw new RuntimeException(
-                        String.format(
-                                "[Exception] Dead [%s] daisy [%s]" +
-                                        "should not be handled by " +
-                                        "handleDaisyLifeByTemperature " +
-                                        "on ground [%s], check logic!",
-                                daisy.getColor(),
-                                daisy.getId().substring(0, 8),
-                                id.substring(0, 8)
-                        )
-                );
-            }
-            // Try randomly sprout daisies by local temperature
-            // formula from NetLogo Model
-            double seedThreshold =
-                    (0.1457 * temperature) -
-                            (0.0032 * (Math.pow(temperature, 2)) - 0.6443);
+                setDaisy(null);
+            } else {
+                // Try randomly sprout daisies by local temperature
+                // formula from NetLogo Model
+                double seedThreshold =
+                        (0.1457 * temperature) -
+                                (0.0032 * (Math.pow(temperature, 2)) - 0.6443);
 
-            Random randomObj = new SecureRandom();
-            if (randomObj.nextDouble() < seedThreshold) {
-                // get one neighbours without daisy by random
-                List<GroundPatch> emptyNeighbours =
-                        getNeighbours()
-                                .stream()
-                                .filter(neighbour ->
-                                        neighbour.getCurrentTurtle() == null)
-                                .map(emptyNeighbour -> (GroundPatch) emptyNeighbour)
-                                .toList();
-                int neighbourSize = emptyNeighbours.size();
-                if (neighbourSize > 0) {
-                    GroundPatch theRandomEmptyNeighbour =
-                            emptyNeighbours.get(
-                                    randomObj.nextInt(neighbourSize)
-                            );
+                Random randomObj = new SecureRandom();
+                if (randomObj.nextDouble() < seedThreshold) {
+                    // get one neighbours without daisy
+                    List<GroundPatch> emptyNeighbours =
+                            getNeighbours()
+                                    .stream()
+                                    .filter(neighbour ->
+                                            neighbour.getCurrentTurtle() == null)
+                                    .map(emptyNeighbour -> (GroundPatch) emptyNeighbour)
+                                    .toList();
 
-                    // create a new daisy on the neighbor with my daisy's color
-                    theRandomEmptyNeighbour.setDaisy(
-                            new Daisy(
-                                    theRandomEmptyNeighbour,
-                                    this.daisy.getColor(),
-                                    0
-                            )
-                    );
+                    // get one random empty neighbour
+                    int neighbourSize = emptyNeighbours.size();
+                    if (neighbourSize > 0) {
+                        GroundPatch theRandomEmptyNeighbour =
+                                emptyNeighbours.get(
+                                        randomObj.nextInt(neighbourSize)
+                                );
+
+                        // create a new daisy on the neighbor with my daisy's color
+                        theRandomEmptyNeighbour.setDaisy(
+                                new Daisy(
+                                        theRandomEmptyNeighbour,
+                                        this.daisy.getColor(),
+                                        0
+                                )
+                        );
+                    }
                 }
             }
         }

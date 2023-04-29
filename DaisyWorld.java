@@ -134,7 +134,8 @@ public class DaisyWorld implements Observer {
         StringBuilder consoleSb = new StringBuilder();
         StringBuilder fileSb = new StringBuilder();
 
-        Map<Constants.Color, Integer> daisyColorPopulationMap = new HashMap<>();
+        int whitePopulation = 0;
+        int blackPopulation = 0;
         int totalPopulation = 0;
 
         consoleSb.append(
@@ -151,10 +152,11 @@ public class DaisyWorld implements Observer {
                 if (theDaisy != null && !theDaisy.isDead()) {
 
                     // calc daisy population
-                    daisyColorPopulationMap.put(
-                            theDaisy.getColor(),
-                            1 + daisyColorPopulationMap.getOrDefault(
-                                    theDaisy.getColor(), 0));
+                    if (theDaisy.getColor().equals(Constants.Color.WHITE)) {
+                        whitePopulation++;
+                    } else if (theDaisy.getColor().equals(Constants.Color.BLACK)) {
+                        blackPopulation++;
+                    }
                     totalPopulation++;
 
                     if (displayWorld) {
@@ -193,14 +195,12 @@ public class DaisyWorld implements Observer {
         );
         fileSb.append(globalTemp).append(",");
 
-        int whitePopulation = daisyColorPopulationMap.get(Constants.Color.WHITE);
         consoleSb.append(
                 String.format("While daisy population number: %s; \n",
                         whitePopulation)
         );
         fileSb.append(whitePopulation).append(",");
 
-        int blackPopulation = daisyColorPopulationMap.get(Constants.Color.BLACK);
         consoleSb.append(
                 String.format("Black daisy population number: %s; \n",
                         blackPopulation)

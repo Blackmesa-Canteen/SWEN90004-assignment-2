@@ -18,6 +18,8 @@ public class Daisy implements Turtle{
     private final Constants.Color color;
 
     private final Double albedo;
+
+    private final long maxAge;
     private long currentAge;
 
     private GroundPatch groundPatch;
@@ -33,12 +35,14 @@ public class Daisy implements Turtle{
         note = color.getNote();
         this.groundPatch = groundPatch;
         // random start age, according to original model
-        currentAge =
-                (long) (Math.random() *
+        currentAge = (long) (Math.random() *
                         ParamsUtil.getParam(
                                 Params.DAISY_MAX_AGE_TICKS,
                                 Double.class
                         ));
+        maxAge = ParamsUtil.getParam(
+                Params.DAISY_MAX_AGE_TICKS,
+                Long.class);
         onCreat();
     }
 
@@ -52,6 +56,9 @@ public class Daisy implements Turtle{
         this.groundPatch = groundPatch;
         // random start age, according to original model
         currentAge = initAge;
+        maxAge = ParamsUtil.getParam(
+                Params.DAISY_MAX_AGE_TICKS,
+                Long.class);
         onCreat();
     }
 
@@ -102,12 +109,10 @@ public class Daisy implements Turtle{
             );
         }
 
-        if (currentAge > ParamsUtil.getParam(
-                Params.DAISY_MAX_AGE_TICKS,
-                Long.class)) {
-            onDestroy();
-        } else {
+        if (currentAge < maxAge) {
             currentAge++;
+        } else {
+            onDestroy();
         }
     }
     @Override
@@ -115,6 +120,15 @@ public class Daisy implements Turtle{
         if (!isDead) {
             isDead = true;
             System.out.format("[%s] daisy [%s] died.\n", color, id);
+        } else {
+            throw new RuntimeException(
+                    String.format(
+                            "[Exception] Dead [%s] daisy [%s] " +
+                                    "has dead and should not be destroyed again, " +
+                                    " logic!",
+                            color,
+                            id.substring(0, 8))
+            );
         }
     }
 
