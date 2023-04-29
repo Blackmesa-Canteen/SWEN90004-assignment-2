@@ -25,6 +25,8 @@ public class DaisyWorld implements Observer {
     // max ticks in the run
     private final Long maxTicks;
 
+    private final Boolean displayWorld;
+
     // world width
     private final Integer width;
 
@@ -48,6 +50,7 @@ public class DaisyWorld implements Observer {
         height = ParamsUtil.getParam(Params.WORLD_HEIGHT, Integer.class);
         delayMs = ParamsUtil.getParam(Params.DELAY_MS, Long.class);
         maxTicks = ParamsUtil.getParam(Params.TOTAL_TICKS, Long.class);
+        displayWorld = ParamsUtil.getParam(Params.DISPLAY_WORLD, Boolean.class);
         groundPatches = new GroundPatch[height][width];
         emptyPatchList = new LinkedList<>();
         // prevent overflow for total patches,
@@ -118,10 +121,12 @@ public class DaisyWorld implements Observer {
         StringBuilder consoleSb = new StringBuilder();
         StringBuilder fileSb = new StringBuilder();
 
-        consoleSb.append("\nState Observation result: \n");
-
         Map<Constants.Color, Integer> daisyColorPopulationMap = new HashMap<>();
         int totalPopulation = 0;
+
+        consoleSb.append(
+                String.format("============ Start of the world state ============\n")
+        );
 
         // sample each patches
         for (int y = 0; y < height; y++) {
@@ -131,8 +136,6 @@ public class DaisyWorld implements Observer {
                 Daisy theDaisy = thePatch.getDaisy();
 
                 if (theDaisy != null && !theDaisy.isDead()) {
-                    line.append(theDaisy.getNote());
-                    line.append(" ");
 
                     // calc daisy population
                     daisyColorPopulationMap.put(
@@ -140,18 +143,28 @@ public class DaisyWorld implements Observer {
                             1 + daisyColorPopulationMap.getOrDefault(
                                     theDaisy.getColor(), 0));
                     totalPopulation++;
+
+                    if (displayWorld) {
+                        line.append(theDaisy.getNote());
+                        line.append(" ");
+                    }
                 } else {
-                    line.append(thePatch.getNote());
-                    line.append(" ");
+                    if (displayWorld) {
+                        line.append(thePatch.getNote());
+                        line.append(" ");
+                    }
                 }
             }
-            line.append('\n');
-            consoleSb.append(line);
+
+            if (displayWorld) {
+                line.append('\n');
+                consoleSb.append(line);
+            }
         }
 
         // prepare statistical data
         consoleSb.append('\n');
-        consoleSb.append("World Data: \n");
+        consoleSb.append("World State Data: \n");
         consoleSb.append(
                 String.format("Tick: %s/%s;\n", tickCount, maxTicks)
         );
@@ -183,13 +196,19 @@ public class DaisyWorld implements Observer {
 
 
         consoleSb.append(
-                String.format("Daisy total population number: %s. \n",
+                String.format("Daisy total population number: %s.\n",
                         totalPopulation)
         );
+
+        consoleSb.append(
+                String.format("============ End of the world state ============\n",
+                        totalPopulation)
+        );
+
         fileSb.append(totalPopulation);
 
         // flush and display on console
-        FileUtil.clearConsole();
+        // FileUtil.clearConsole();
         System.out.println(consoleSb);
 
         // dump data into csv
