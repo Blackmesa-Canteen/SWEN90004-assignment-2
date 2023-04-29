@@ -16,7 +16,9 @@ public class Daisy implements Turtle{
     private final String id;
     private final Character note;
     private final Constants.Color color;
-    private int currentAge;
+
+    private final Double albedo;
+    private long currentAge;
 
     private GroundPatch groundPatch;
 
@@ -25,9 +27,31 @@ public class Daisy implements Turtle{
     public Daisy(GroundPatch groundPatch, Constants.Color color) {
         id = UUID.randomUUID().toString();
         this.color = color;
+        albedo = color.equals(Constants.Color.WHITE) ?
+                ParamsUtil.getParam(Params.ALBEDO_OF_WHITES, Double.class) :
+                ParamsUtil.getParam(Params.ALBEDO_OF_BLACKS, Double.class);
         note = color.getNote();
         this.groundPatch = groundPatch;
-        isDead = false;
+        // random start age, according to original model
+        currentAge =
+                (long) (Math.random() *
+                        ParamsUtil.getParam(
+                                Params.DAISY_MAX_AGE_TICKS,
+                                Double.class
+                        ));
+        onCreat();
+    }
+
+    public Daisy(GroundPatch groundPatch, Constants.Color color, long initAge) {
+        id = UUID.randomUUID().toString();
+        this.color = color;
+        albedo = color.equals(Constants.Color.WHITE) ?
+                ParamsUtil.getParam(Params.ALBEDO_OF_WHITES, Double.class) :
+                ParamsUtil.getParam(Params.ALBEDO_OF_BLACKS, Double.class);
+        note = color.getNote();
+        this.groundPatch = groundPatch;
+        // random start age, according to original model
+        currentAge = initAge;
         onCreat();
     }
 
@@ -39,7 +63,7 @@ public class Daisy implements Turtle{
         return id;
     }
 
-    public int getCurrentAge() {
+    public long getCurrentAge() {
         return currentAge;
     }
 
@@ -51,29 +75,40 @@ public class Daisy implements Turtle{
         return note;
     }
 
+    public Double getAlbedo() {
+        return albedo;
+    }
+
     @Override
     public void onCreat() {
-        // random start age, according to original model
-        currentAge = (int)
-                (Math.random() *
-                        ParamsUtil.getParam(Params.DAISY_MAX_AGE_TICKS, Double.class)
-                );
-
-        System.out.format("Daisy [%s] was created with color [%s].\n",
+        isDead = false;
+        System.out.format("Daisy [%s] was created with color [%s] and albedo [%s].\n",
                 id.substring(0,8),
-                color
+                color,
+                albedo
         );
     }
 
     @Override
     public void onStateUpdate() {
-        if (currentAge > ParamsUtil.getParam(Params.DAISY_MAX_AGE_TICKS, Double.class)) {
+        // check logic error
+        if (isDead) {
+            throw new RuntimeException(
+                    String.format(
+                            "[Exception] Dead [%s] daisy [%s] " +
+                                    "should not update its state, check logic!",
+                            color,
+                            id.substring(0, 8))
+            );
+        }
+
+        if (currentAge > ParamsUtil.getParam(
+                Params.DAISY_MAX_AGE_TICKS,
+                Long.class)) {
             onDestroy();
         } else {
             currentAge++;
         }
-
-        // TODO temp check
     }
     @Override
     public void onDestroy() {

@@ -1,6 +1,5 @@
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.security.SecureRandom;
+import java.util.*;
 
 /**
  * <p>
@@ -22,15 +21,21 @@ public class GroundPatch implements Patch {
 
     private final Coordinate coordinate;
 
+    private final Double albedoOfGround;
+
+    private final Double diffusionRate;
+
     private Daisy daisy;
 
-    private double temp;
+    private double temperature;
 
     public GroundPatch(DaisyWorld world, int xcor, int ycor) {
         this.world = world;
         id = UUID.randomUUID().toString();
         coordinate = new Coordinate(xcor, ycor);
         note = Constants.GROUND_PATCH_NOTE;
+        albedoOfGround = ParamsUtil.getParam(Params.ALBEDO_OF_GROUND, Double.class);
+        diffusionRate = ParamsUtil.getParam(Params.DIFFUSION_RATE_OF_GROUND, Double.class);
         onCreate();
     }
 
@@ -46,33 +51,186 @@ public class GroundPatch implements Patch {
 
     @Override
     public void onStateUpdate() {
-        // if the patch has a daisy on it
-        if (daisy != null) {
-
-            // if the daisy is dead, release the reference
-            if (daisy.isDead()) {
-                daisy = null;
-                return;
-            }
-            // TODO to be continued
+        // free the dead daisy at start of the run, if any
+        if (daisy != null && daisy.isDead()) {
+            setDaisy(null);
         }
 
-        System.out.println("Ground patch ticks");
+        // absorb solar energy
+        updateTempBySolarLuminosity();
+
+        // diffuse energy
+        updateTempByDiffuse();
+
+        // handle daisy sprout
+        handleDaisySprout();
+
+        // Tick the attached daisy's lifecycle along with the ground patch
+        // In short: increase the daisy age after the update tick
+        if (daisy != null) daisy.onStateUpdate();
+    }
+
+    /**
+     * Update patch temperature by solar luminosity
+     */
+    public void updateTempBySolarLuminosity() {
+        // update temps and so on
+        double absorbedLuminosity = 0;
+        double localHeating = 0;
+
+        if (daisy == null) {
+            absorbedLuminosity = (1 - albedoOfGround) * world.getSolarLuminosity();
+        } else {
+            // update state if has daisy
+            absorbedLuminosity = (1 - daisy.getAlbedo()) * world.getSolarLuminosity();
+        }
+
+        if (absorbedLuminosity > 0) {
+            localHeating = 72 * Math.log(absorbedLuminosity) + 80;
+        } else {
+            localHeating = 80;
+        }
+
+        temperature = (localHeating + temperature) / 2;
+    }
+
+    /**
+     * Update patch temperature by Diffuse neighbors.
+     *
+     * Tells each patch to give equal shares of (number * 100) percent of
+     * the value of patch-variable to its eight neighboring patches.
+     *
+     * number should be between 0 and 1. Regardless of topology the sum of patch
+     * will be conserved across the world. (If a patch has fewer than 8 neighbors,
+     * each neighbor still gets an 8 share; the patch keeps any leftover shares.)
+     */
+    private void updateTempByDiffuse() {
+
+        // current patch offer out his temp with a rate
+        double tempDiffused = temperature * diffusionRate;
+        temperature -= tempDiffused;
+
+        List<Patch> neighbours = getNeighbours();
+        for (Patch patch : neighbours) {
+            // all neighbour get 1/8 temp share, regardless of topology
+            GroundPatch groundPatch = (GroundPatch) patch;
+            groundPatch.doTemperatureIncrement(
+                    tempDiffused *
+                            Constants.DIFFUSION_SHARE_RATE_2D
+            );
+        }
+    }
+
+    /**
+     * Handles daisy sprout, based on local temperature
+     */
+    private void handleDaisySprout() {
+        if (daisy != null) {
+            // check logic
+            if (daisy.isDead()) {
+                throw new RuntimeException(
+                        String.format(
+                                "[Exception] Dead [%s] daisy [%s]" +
+                                        "should not be handled by " +
+                                        "handleDaisyLifeByTemperature " +
+                                        "on ground [%s], check logic!",
+                                daisy.getColor(),
+                                daisy.getId().substring(0, 8),
+                                id.substring(0, 8)
+                        )
+                );
+            }
+            // Try randomly sprout daisies by local temperature
+            // formula from NetLogo Model
+            double seedThreshold =
+                    (0.1457 * temperature) -
+                            (0.0032 * (Math.pow(temperature, 2)) - 0.6443);
+
+            Random randomObj = new SecureRandom();
+            if (randomObj.nextDouble() < seedThreshold) {
+                // get one neighbours without daisy by random
+                List<GroundPatch> emptyNeighbours =
+                        getNeighbours()
+                                .stream()
+                                .filter(neighbour ->
+                                        neighbour.getCurrentTurtle() == null)
+                                .map(emptyNeighbour -> (GroundPatch) emptyNeighbour)
+                                .toList();
+                int neighbourSize = emptyNeighbours.size();
+                if (neighbourSize > 0) {
+                    GroundPatch theRandomEmptyNeighbour =
+                            emptyNeighbours.get(
+                                    randomObj.nextInt(neighbourSize)
+                            );
+
+                    // create a new daisy on the neighbor with my daisy's color
+                    theRandomEmptyNeighbour.setDaisy(
+                            new Daisy(
+                                    theRandomEmptyNeighbour,
+                                    this.daisy.getColor(),
+                                    0
+                            )
+                    );
+                }
+            }
+        }
     }
 
     @Override
     public Coordinate getCoordinate() {
-        return null;
+        return coordinate;
     }
 
     @Override
     public Turtle getCurrentTurtle() {
-        return null;
+        return daisy;
     }
 
     @Override
-    public List<Patch> getNeighbors() {
-        return null;
+    public List<Patch> getNeighbours() {
+        List<Patch> neighbours = new LinkedList<>();
+        int hostX = coordinate.getXcor();
+        int hostY = coordinate.getYcor();
+
+        boolean hasLeftNeighbour = hostX > 0;
+        boolean hasRightNeighbour = hostX < world.getWidth() - 1;
+        boolean hasTopNeighbour = hostY > 0;
+        boolean hasBottomNeighbour = hostY < world.getHeight() - 1;
+        // left
+        if (hasLeftNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY][hostX-1]);
+        }
+        // right
+        if (hasRightNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY][hostX+1]);
+        }
+        // top
+        if (hasTopNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY-1][hostX]);
+        }
+        // bottom
+        if (hasBottomNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY+1][hostX]);
+        }
+
+        // top-left
+        if (hasLeftNeighbour && hasTopNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY-1][hostX-1]);
+        }
+        // top-right
+        if (hasRightNeighbour && hasTopNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY-1][hostX+1]);
+        }
+        // bottom-left
+        if (hasLeftNeighbour && hasBottomNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY+1][hostX-1]);
+        }
+        // bottom-right
+        if (hasRightNeighbour && hasBottomNeighbour) {
+            neighbours.add(world.getGroundPatches()[hostY+1][hostX+1]);
+        }
+
+        return neighbours;
     }
 
     public String getId() {
@@ -108,12 +266,12 @@ public class GroundPatch implements Patch {
         }
     }
 
-    public double getTemp() {
-        return temp;
+    public double getTemperature() {
+        return temperature;
     }
 
-    public void setTemp(double temp) {
-        this.temp = temp;
+    public void doTemperatureIncrement (double tempIncrement) {
+        temperature += tempIncrement;
     }
 
     @Override

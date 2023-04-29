@@ -82,7 +82,7 @@ public class DaisyWorld implements Observer {
         initDaisies();
 
         // init temp on patches
-        initTemp();
+        initTemperature();
 
         // reset tick frames
         tickCount = 0L;
@@ -96,6 +96,19 @@ public class DaisyWorld implements Observer {
     @Override
     public void onGoing() throws InterruptedException {
         while (tickCount <= maxTicks) {
+
+            // scan and update state of each patch
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    GroundPatch groundPatch = groundPatches[y][x];
+                    groundPatch.onStateUpdate();
+                }
+            }
+
+            // update global temp
+            updateGlobalTemp();
+
+            // Sample the current world
             onObserve();
 
             if (delayMs > 0) {
@@ -206,6 +219,7 @@ public class DaisyWorld implements Observer {
         );
 
         fileSb.append(totalPopulation);
+        fileSb.append('\n');
 
         // flush and display on console
         // FileUtil.clearConsole();
@@ -268,10 +282,50 @@ public class DaisyWorld implements Observer {
     /**
      * init temp
      */
-    private void initTemp() {
-        // TODO init temp on patches
+    private void initTemperature() {
 
-        // 1. update patch temp
+        // 1. update all patches temperature
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                groundPatches[y][x].updateTempBySolarLuminosity();
+            }
+        }
+
         // 2. update global patch, which is mean temp among all patches
+        updateGlobalTemp();
+    }
+
+    /**
+     * update global temp based on each ground patch
+     */
+    private void updateGlobalTemp() {
+        double sum = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                sum += groundPatches[y][x].getTemperature();
+            }
+        }
+
+        globalTemp = sum / totalPatches;
+    }
+
+    public Double getGlobalTemp() {
+        return globalTemp;
+    }
+
+    public Double getSolarLuminosity() {
+        return solarLuminosity;
+    }
+
+    public GroundPatch[][] getGroundPatches() {
+        return groundPatches;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public Integer getHeight() {
+        return height;
     }
 }

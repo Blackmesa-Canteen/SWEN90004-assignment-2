@@ -40,4 +40,7 @@ public interface Constants {
 
     // Bare ground Patch Node
     Character GROUND_PATCH_NOTE = '_';
+
+    // 2D Diffusion share rate always be 1/8, regardless of topology
+    Double DIFFUSION_SHARE_RATE_2D = 1 / 8.0;
 }

@@ -33,7 +33,7 @@ public interface Patch {
     Turtle getCurrentTurtle();
 
     /**
-     * get neighbor patches of current patch
+     * get 8 neighbor patches of current patch
      */
-    List<Patch> getNeighbors();
+    List<Patch> getNeighbours();
 }
