@@ -1,3 +1,4 @@
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -21,7 +22,7 @@ public class Daisy implements Turtle{
     private boolean isDead;
 
     public Daisy(GroundPatch groundPatch, Constants.Color color) {
-        id = UUID.randomUUID().toString().substring(0,8);
+        id = UUID.randomUUID().toString();
         this.color = color;
         this.groundPatch = groundPatch;
         isDead = false;
@@ -45,7 +46,7 @@ public class Daisy implements Turtle{
                 );
 
         System.out.format("daisy [%s] was created with color [%s].\n",
-                id,
+                id.substring(0,8),
                 color.toString()
         );
     }
@@ -84,5 +85,18 @@ public class Daisy implements Turtle{
     @Deprecated
     public void setCoordinate(int xcor, int ycor) {
         throw new RuntimeException("Not implemented!");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Daisy daisy = (Daisy) o;
+        return Objects.equals(id, daisy.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

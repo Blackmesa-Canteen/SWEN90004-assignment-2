@@ -1,4 +1,3 @@
-import java.io.PrintWriter;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -17,6 +16,15 @@ public class DaisyWorld implements Observer {
     // global average temp
     private double globalTemp;
 
+    // current solar luminosity
+    private double solarLuminosity;
+
+    // least delays between ticks
+    private final long delayMs;
+
+    // max ticks in the run
+    private final long maxTicks;
+
     // world width
     private final int width;
 
@@ -29,17 +37,21 @@ public class DaisyWorld implements Observer {
     // patch set used for init daisies
     private final LinkedList<GroundPatch> emptyPatchList;
 
+    // total num of ground patches
     private final int totalPatches;
 
     // tick frame counter
     private long tickCount;
 
     public DaisyWorld() {
-        this.width = ParamsUtil.getParam(Params.WORLD_WIDTH, Integer.class);
-        this.height = ParamsUtil.getParam(Params.WORLD_HEIGHT, Integer.class);
-        this.groundPatches = new GroundPatch[height][width];
+        width = ParamsUtil.getParam(Params.WORLD_WIDTH, Integer.class);
+        height = ParamsUtil.getParam(Params.WORLD_HEIGHT, Integer.class);
+        delayMs = ParamsUtil.getParam(Params.DELAY_MS, Long.class);
+        maxTicks = ParamsUtil.getParam(Params.TOTAL_TICKS, Long.class);
+        groundPatches = new GroundPatch[height][width];
         emptyPatchList = new LinkedList<>();
-        // prevent overflow for total patches
+        // prevent overflow for total patches,
+        // because Java LinkedList only supports INTEGER_MAX size
         int res = 0;
         try {
             res = Math.multiplyExact(width, height);
@@ -54,9 +66,10 @@ public class DaisyWorld implements Observer {
     }
 
     @Override
-    public void init() {
+    public void onInit() {
         // init business logic
         globalTemp = ParamsUtil.getParam(Params.INIT_GLOBAL_TEMP, Double.class);
+        solarLuminosity = ParamsUtil.getParam(Params.SOLAR_LUMINOSITY, Double.class);
         System.out.format("World was created in temp [%s] degree.\n", globalTemp);
 
         // init ground patches
@@ -71,28 +84,36 @@ public class DaisyWorld implements Observer {
         // reset tick frames
         tickCount = 0;
 
-        // sample the world, show statistic data
-        sample();
+        // sample current world state, show statistic data
+        onObserve();
 
         System.out.println("world init finished!");
     }
 
     @Override
-    public void go() {
-        System.out.println("world goes");
+    public void onGoing() throws InterruptedException {
+        while (tickCount <= maxTicks) {
+            System.out.println("[DEBUG] world goes");
+
+            if (delayMs > 0) {
+                //noinspection BusyWait
+                Thread.sleep(delayMs);
+            }
+        }
     }
 
 
     @Override
-    public void finished() {
+    public void onDestroy() {
         System.out.println("world finished");
     }
 
-
     /**
-     * sample and display statistic data
+     * Observe current world state,
+     * Sample the statistical data.
      */
-    private void sample() {
+    @Override
+    public void onObserve() {
         System.out.println("sample data.");
     }
 

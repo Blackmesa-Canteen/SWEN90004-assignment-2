@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -25,7 +26,7 @@ public class GroundPatch implements Patch {
 
     public GroundPatch(DaisyWorld world, int xcor, int ycor) {
         this.world = world;
-        id = UUID.randomUUID().toString().substring(0,8);
+        id = UUID.randomUUID().toString();
         coordinate = new Coordinate(xcor, ycor);
         onCreate();
     }
@@ -34,7 +35,7 @@ public class GroundPatch implements Patch {
     public void onCreate() {
         System.out.format("Ground Patch [%s] was created " +
                         "in coordinate (%s, %s).\n",
-                id,
+                id.substring(0,8),
                 coordinate.getXcor(),
                 coordinate.getYcor()
         );
@@ -89,5 +90,18 @@ public class GroundPatch implements Patch {
 
     public void setTemp(double temp) {
         this.temp = temp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroundPatch that = (GroundPatch) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

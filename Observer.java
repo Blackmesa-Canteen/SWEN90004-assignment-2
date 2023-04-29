@@ -6,16 +6,22 @@
 public interface Observer {
 
     /**
-     * observer can init the world
+     * observer behaves when init
      */
-    void init();
+    void onInit();
     /**
-     * observer can watch the world goes
+     * observer can go along with the world
      */
-    void go();
+    void onGoing() throws InterruptedException;
 
     /**
-     * observer can finish the world
+     * Observe current world state,
+     * Sample the statistical data.
      */
-    void finished();
+    void onObserve();
+
+    /**
+     * observer behaves when the world at an end
+     */
+    void onDestroy();
 }
