@@ -58,12 +58,6 @@ public class GroundPatch implements Patch {
     public void onStateUpdate() {
         // absorb solar energy
         updateTempBySolarLuminosity();
-
-        // diffuse energy TODO too many diffuse
-        // updateTempByDiffuse();
-
-        // handle daisy sprout TODO too many checks
-        // checkSurvivability();
     }
 
     /**
