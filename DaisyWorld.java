@@ -1,4 +1,5 @@
 import java.io.PrintWriter;
+import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -91,7 +92,8 @@ public class DaisyWorld implements Observer {
     private void initGroundPatches() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                GroundPatch groundPatch = new GroundPatch(this, x, y);
+                GroundPatch groundPatch =
+                        new GroundPatch(this, x, y);
                 groundPatches[x][y] = groundPatch;
                 emptyPatchList.offer(groundPatch);
             }
@@ -103,15 +105,17 @@ public class DaisyWorld implements Observer {
      */
     private void initDaisies() {
         // shuffle collection to get random patch list
-        Collections.shuffle(emptyPatchList);
+        Collections.shuffle(emptyPatchList, new SecureRandom());
 
         // calc total daisies needed
         long numWhiteDaisy = (long)
                 (totalPatches *
-                        ParamsUtil.getParam(Params.START_PERCENTAGE_WHITES, Double.class));
+                        ParamsUtil.getParam(
+                                Params.START_PERCENTAGE_WHITES, Double.class));
         long numBlackDaisy = (long)
                 (totalPatches *
-                        ParamsUtil.getParam(Params.START_PERCENTAGE_BLACKS, Double.class));
+                        ParamsUtil.getParam(
+                                Params.START_PERCENTAGE_BLACKS, Double.class));
 
         // add black daisy
         for (long i = 0; i < numBlackDaisy; i++) {
