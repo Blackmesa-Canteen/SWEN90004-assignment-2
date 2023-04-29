@@ -15,6 +15,9 @@ public class GroundPatch implements Patch {
 
     private final String id;
 
+    private final boolean isDebugMode =
+            ParamsUtil.getParam(Params.DEBUG_MODE, Boolean.class);
+
     private final char note;
 
     private final DaisyWorld world;
@@ -41,12 +44,14 @@ public class GroundPatch implements Patch {
 
     @Override
     public void onCreate() {
-        System.out.format("Ground Patch [%s] was created " +
-                        "in coordinate (%s, %s).\n",
-                id.substring(0,8),
-                coordinate.getXcor(),
-                coordinate.getYcor()
-        );
+        if (isDebugMode) {
+            System.out.format("Ground Patch [%s] was created " +
+                            "in coordinate (%s, %s).\n",
+                    id.substring(0,8),
+                    coordinate.getXcor(),
+                    coordinate.getYcor()
+            );
+        }
     }
 
     @Override
@@ -233,22 +238,24 @@ public class GroundPatch implements Patch {
 
     public void setDaisy(Daisy daisy) {
         this.daisy = daisy;
-        if (daisy != null) {
-            System.out.format(
-                    "Patch [%s] at (%s, %s) now has [%s] daisy [%s].\n",
-                    id.substring(0,8),
-                    coordinate.getXcor(),
-                    coordinate.getYcor(),
-                    daisy.getColor(),
-                    daisy.getId().substring(0,8)
-            );
-        } else {
-            System.out.format(
-                    "Patch [%s] at (%s, %s) now has no daisy.\n",
-                    id.substring(0,8),
-                    coordinate.getXcor(),
-                    coordinate.getYcor()
-            );
+        if (isDebugMode) {
+            if (daisy != null) {
+                System.out.format(
+                        "Patch [%s] at (%s, %s) now has [%s] daisy [%s].\n",
+                        id.substring(0,8),
+                        coordinate.getXcor(),
+                        coordinate.getYcor(),
+                        daisy.getColor(),
+                        daisy.getId().substring(0,8)
+                );
+            } else {
+                System.out.format(
+                        "Patch [%s] at (%s, %s) now has no daisy.\n",
+                        id.substring(0,8),
+                        coordinate.getXcor(),
+                        coordinate.getYcor()
+                );
+            }
         }
     }
 

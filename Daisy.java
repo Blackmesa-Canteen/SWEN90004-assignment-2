@@ -14,6 +14,10 @@ import java.util.UUID;
 public class Daisy implements Turtle{
 
     private final String id;
+
+    private final boolean isDebugMode =
+            ParamsUtil.getParam(Params.DEBUG_MODE, Boolean.class);
+
     private final Character note;
     private final Constants.Color color;
 
@@ -89,11 +93,13 @@ public class Daisy implements Turtle{
     @Override
     public void onCreat() {
         isDead = false;
-        System.out.format("Daisy [%s] was created with color [%s] and albedo [%s].\n",
-                id.substring(0,8),
-                color,
-                albedo
-        );
+        if (isDebugMode) {
+            System.out.format("Daisy [%s] was created with color [%s] and albedo [%s].\n",
+                    id.substring(0,8),
+                    color,
+                    albedo
+            );
+        }
     }
 
     @Override
@@ -119,7 +125,9 @@ public class Daisy implements Turtle{
     public void onDestroy() {
         if (!isDead) {
             isDead = true;
-            System.out.format("[%s] daisy [%s] died.\n", color, id);
+            if (isDebugMode) {
+                System.out.format("[%s] daisy [%s] died.\n", color, id);
+            }
         } else {
             throw new RuntimeException(
                     String.format(

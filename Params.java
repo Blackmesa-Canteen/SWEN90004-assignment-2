@@ -13,6 +13,7 @@ public interface Params {
 
     // !!! param names, not param values !!!
     // please see params.properties
+    String DEBUG_MODE = "debug-mode";
     String DISPLAY_WORLD = "display-world";
     String TOTAL_TICKS = "total-ticks";
     String DELAY_MS = "delay-ms";
