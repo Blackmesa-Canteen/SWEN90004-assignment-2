@@ -136,7 +136,7 @@ public class DaisyWorld implements Observer {
 
     @Override
     public void onDestroy() {
-        System.out.println("world finished");
+        System.out.println("goodbye world");
     }
 
     /**

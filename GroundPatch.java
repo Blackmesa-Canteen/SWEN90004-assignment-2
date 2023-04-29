@@ -126,7 +126,8 @@ public class GroundPatch implements Patch {
                 // Try randomly sprout daisies by local temperature
                 // formula from NetLogo Model
                 double seedThreshold =
-                        (0.1457 * temperature) - (0.0032 * (Math.pow(temperature, 2))) - 0.6443;
+                        (0.1457 * temperature) -
+                                (0.0032 * (Math.pow(temperature, 2))) - 0.6443;
 
                 Random randomObj = new SecureRandom();
                 if (randomObj.nextDouble() < seedThreshold) {
