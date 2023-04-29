@@ -61,6 +61,9 @@ public class ParamsUtil {
                 res = (T) inputString;
             } else if (type.isAssignableFrom(Integer.class)) {
                 res = (T) Integer.valueOf(inputString);
+
+            } else if (type.isAssignableFrom(Long.class)) {
+                res = (T) Long.valueOf(inputString);
             } else if (type.isAssignableFrom(Double.class)) {
                 res = (T) Double.valueOf(inputString);
             } else if (type.isAssignableFrom(Boolean.class)) {

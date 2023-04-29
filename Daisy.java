@@ -14,6 +14,7 @@ import java.util.UUID;
 public class Daisy implements Turtle{
 
     private final String id;
+    private final Character note;
     private final Constants.Color color;
     private int currentAge;
 
@@ -24,6 +25,7 @@ public class Daisy implements Turtle{
     public Daisy(GroundPatch groundPatch, Constants.Color color) {
         id = UUID.randomUUID().toString();
         this.color = color;
+        note = color.getNote();
         this.groundPatch = groundPatch;
         isDead = false;
         onCreat();
@@ -33,8 +35,20 @@ public class Daisy implements Turtle{
         return color;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public int getCurrentAge() {
+        return currentAge;
+    }
+
     public boolean isDead() {
         return isDead;
+    }
+
+    public Character getNote() {
+        return note;
     }
 
     @Override
@@ -45,9 +59,9 @@ public class Daisy implements Turtle{
                         ParamsUtil.getParam(Params.DAISY_MAX_AGE_TICKS, Double.class)
                 );
 
-        System.out.format("daisy [%s] was created with color [%s].\n",
+        System.out.format("Daisy [%s] was created with color [%s].\n",
                 id.substring(0,8),
-                color.toString()
+                color
         );
     }
 
@@ -65,7 +79,7 @@ public class Daisy implements Turtle{
     public void onDestroy() {
         if (!isDead) {
             isDead = true;
-            System.out.format("[%s] daisy [%s] died.\n", color.toString(), id);
+            System.out.format("[%s] daisy [%s] died.\n", color, id);
         }
     }
 

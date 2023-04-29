@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +46,22 @@ public class FileUtil {
             System.out.format("[SUCCESS] Generated result file [%s].\n", targetPath);
         } catch (Exception e) {
             System.out.format("[ERROR] Error occurs when writing string to result file: [%s]. \n", e.toString());
+        }
+    }
+
+    /**
+     * Clear console output
+     */
+    public static void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else {
+                System.out.print("\033\143");
+            }
+        } catch (IOException | InterruptedException ignored) {
+
         }
     }
 }

@@ -16,6 +16,8 @@ public class GroundPatch implements Patch {
 
     private final String id;
 
+    private final char note;
+
     private final DaisyWorld world;
 
     private final Coordinate coordinate;
@@ -28,6 +30,7 @@ public class GroundPatch implements Patch {
         this.world = world;
         id = UUID.randomUUID().toString();
         coordinate = new Coordinate(xcor, ycor);
+        note = Constants.GROUND_PATCH_NOTE;
         onCreate();
     }
 
@@ -80,8 +83,29 @@ public class GroundPatch implements Patch {
         return daisy;
     }
 
+    public char getNote() {
+        return note;
+    }
+
     public void setDaisy(Daisy daisy) {
         this.daisy = daisy;
+        if (daisy != null) {
+            System.out.format(
+                    "Patch [%s] at (%s, %s) now has [%s] daisy [%s].\n",
+                    id.substring(0,8),
+                    coordinate.getXcor(),
+                    coordinate.getYcor(),
+                    daisy.getColor(),
+                    daisy.getId().substring(0,8)
+            );
+        } else {
+            System.out.format(
+                    "Patch [%s] at (%s, %s) now has no daisy.\n",
+                    id.substring(0,8),
+                    coordinate.getXcor(),
+                    coordinate.getYcor()
+            );
+        }
     }
 
     public double getTemp() {

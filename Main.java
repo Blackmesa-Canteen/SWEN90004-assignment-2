@@ -10,10 +10,13 @@
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         System.out.println("hello world");
-        FileUtil.writeStringToResultFile("hello! 1 \n");
-        FileUtil.writeStringToResultFile("hello! 2 \n");
-        System.out.println(ParamsUtil.getParam(Params.DIFFUSION_RATE_OF_GROUND, Double.class));
+        Observer daisyWorld = new DaisyWorld();
+        System.out.println("hello world");
+        daisyWorld.onInit();
+        daisyWorld.onGoing();
+        daisyWorld.onDestroy();
+        System.out.println("goodbye world");
     }
 }

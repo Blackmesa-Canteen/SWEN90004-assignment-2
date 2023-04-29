@@ -37,4 +37,7 @@ public interface Constants {
 
     // csv is required for the project
     String DATA_EXTENSION = ".csv";
+
+    // Bare ground Patch Node
+    Character GROUND_PATCH_NOTE = '_';
 }
