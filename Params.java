@@ -1,9 +1,10 @@
 /**
  * <p>
  * Constants for param names.
- *
+ * !!!
  * Note: This interface only records parameter names, NOT values.
  * For param values, please go to the file `params.properties`
+ * !!!
  * </p>
  *
  * @author Xiaotian LI
@@ -11,8 +12,9 @@
  */
 public interface Params {
 
-    // !!! param names, not param values !!!
-    // For values, see `params.properties` file in project folder
+    /* !!! param names, not param values !!! */
+    /* For param values, goto `params.properties` file in project folder */
+
     String DEBUG_MODE = "debug-mode";
     String DISPLAY_WORLD = "display-world";
     String TOTAL_TICKS = "total-ticks";
