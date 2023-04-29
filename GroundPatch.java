@@ -51,19 +51,14 @@ public class GroundPatch implements Patch {
 
     @Override
     public void onStateUpdate() {
-        // free the dead daisy at start of the run, if any
-        if (daisy != null && daisy.isDead()) {
-            setDaisy(null);
-        }
-
         // absorb solar energy
         updateTempBySolarLuminosity();
 
-        // diffuse energy
-        updateTempByDiffuse();
+        // diffuse energy TODO too many diffuse
+        // updateTempByDiffuse();
 
-        // handle daisy sprout
-        checkSurvivability();
+        // handle daisy sprout TODO too many checks
+        // checkSurvivability();
     }
 
     /**
@@ -100,7 +95,7 @@ public class GroundPatch implements Patch {
      * will be conserved across the world. (If a patch has fewer than 8 neighbors,
      * each neighbor still gets an 8 share; the patch keeps any leftover shares.)
      */
-    private void updateTempByDiffuse() {
+    public void updateTempByDiffuse() {
 
         // current patch offer out his temp with a rate
         double tempDiffused = temperature * diffusionRate;
@@ -120,7 +115,7 @@ public class GroundPatch implements Patch {
     /**
      * Handles daisy sprout, based on local temperature
      */
-    private void checkSurvivability() {
+    public void checkDaisySurvivability() {
         if (daisy != null) {
             // tick daisy age
             daisy.onStateUpdate();
@@ -131,8 +126,7 @@ public class GroundPatch implements Patch {
                 // Try randomly sprout daisies by local temperature
                 // formula from NetLogo Model
                 double seedThreshold =
-                        (0.1457 * temperature) -
-                                (0.0032 * (Math.pow(temperature, 2)) - 0.6443);
+                        (0.1457 * temperature) - (0.0032 * (Math.pow(temperature, 2))) - 0.6443;
 
                 Random randomObj = new SecureRandom();
                 if (randomObj.nextDouble() < seedThreshold) {

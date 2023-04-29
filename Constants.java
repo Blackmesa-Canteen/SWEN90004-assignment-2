@@ -42,5 +42,5 @@ public interface Constants {
     Character GROUND_PATCH_NOTE = '_';
 
     // 2D Diffusion share rate always be 1/8, regardless of topology
-    Double DIFFUSION_SHARE_RATE_2D = 1 / 8.0;
+    Double DIFFUSION_SHARE_RATE_2D = (1.0 / 8.0);
 }

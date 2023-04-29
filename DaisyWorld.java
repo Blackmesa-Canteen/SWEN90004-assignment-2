@@ -70,6 +70,12 @@ public class DaisyWorld implements Observer {
 
     @Override
     public void onInit() {
+        // create csv file head
+        String csvHead =
+                "tick-count,solar-luminosity,global-temp," +
+                        "white-population,black-population,total-population\n";
+        FileUtil.writeStringToResultFile(csvHead);
+
         // init business logic
         globalTemp = ParamsUtil.getParam(Params.INIT_GLOBAL_TEMP, Double.class);
         solarLuminosity = ParamsUtil.getParam(Params.SOLAR_LUMINOSITY, Double.class);
@@ -89,28 +95,36 @@ public class DaisyWorld implements Observer {
 
         // sample current world state, show statistic data
         onObserve();
-
-        System.out.println("world init finished!");
     }
 
     @Override
     public void onGoing() throws InterruptedException {
         while (tickCount <= maxTicks) {
-
             // scan and update state of each patch
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    GroundPatch groundPatch = groundPatches[y][x];
-                    groundPatch.onStateUpdate();
+                    groundPatches[y][x].onStateUpdate();
+                }
+            }
+
+            // perform diffuse
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    groundPatches[y][x].updateTempByDiffuse();
+                }
+            }
+
+            // perform daisy check and reproduce
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    groundPatches[y][x].checkDaisySurvivability();
                 }
             }
 
             // update global temp
             updateGlobalTemp();
-
-            // Sample the current world
+            // Sample the current world, show data
             onObserve();
-
             if (delayMs > 0) {
                 //noinspection BusyWait
                 Thread.sleep(delayMs);
