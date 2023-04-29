@@ -29,7 +29,7 @@ public class DaisyWorld implements Observer {
     // patch set used for init daisies
     private final LinkedList<GroundPatch> emptyPatchList;
 
-    private final long totalPatches;
+    private final int totalPatches;
 
     // tick frame counter
     private long tickCount;
@@ -38,9 +38,19 @@ public class DaisyWorld implements Observer {
         this.width = ParamsUtil.getParam(Params.WORLD_WIDTH, Integer.class);
         this.height = ParamsUtil.getParam(Params.WORLD_HEIGHT, Integer.class);
         this.groundPatches = new GroundPatch[height][width];
-        // prevent overflow
-        totalPatches = (long) width * height;
         emptyPatchList = new LinkedList<>();
+        // prevent overflow for total patches
+        int res = 0;
+        try {
+            res = Math.multiplyExact(width, height);
+        } catch(ArithmeticException e) {
+            System.out.println(
+                    "[ERROR] Ground patch number overflow! " +
+                            "Check width and height. Error info: "
+                            + e.getMessage());
+            System.exit(-1);
+        }
+        totalPatches = res;
     }
 
     @Override
