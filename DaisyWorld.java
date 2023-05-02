@@ -25,6 +25,7 @@ public class DaisyWorld implements Observer {
     // max ticks in the run
     private final Long maxTicks;
 
+    // whether display the world in console
     private final Boolean displayWorld;
 
     // world width
@@ -68,6 +69,9 @@ public class DaisyWorld implements Observer {
         totalPatches = res;
     }
 
+    /**
+     * observer init
+     */
     @Override
     public void onInit() {
         // create csv file head
@@ -94,6 +98,9 @@ public class DaisyWorld implements Observer {
         onObserve();
     }
 
+    /**
+     * observer can go along with the world
+     */
     @Override
     public void onGoing() throws InterruptedException {
         while (tickCount <= maxTicks) {
@@ -131,6 +138,9 @@ public class DaisyWorld implements Observer {
     }
 
 
+    /**
+     * observer behaves when the world at an end
+     */
     @Override
     public void onDestroy() {
         System.out.println("goodbye world");

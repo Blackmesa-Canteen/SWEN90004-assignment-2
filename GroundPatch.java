@@ -54,6 +54,9 @@ public class GroundPatch implements Patch {
         }
     }
 
+    /**
+     * patch update state in a tick
+     */
     @Override
     public void onStateUpdate() {
         // absorb solar energy
@@ -171,6 +174,9 @@ public class GroundPatch implements Patch {
         return daisy;
     }
 
+    /**
+     * get 8 neighbor patches of current patch
+     */
     @Override
     public List<Patch> getNeighbours() {
         List<Patch> neighbours = new LinkedList<>();
@@ -230,6 +236,10 @@ public class GroundPatch implements Patch {
         return note;
     }
 
+    /**
+     * Set daisy on current patch
+     * @param daisy Daisy obj
+     */
     public void setDaisy(Daisy daisy) {
         this.daisy = daisy;
         if (isDebugMode) {
@@ -257,6 +267,10 @@ public class GroundPatch implements Patch {
         return temperature;
     }
 
+    /**
+     * Set temperature of current patch
+     * @param tempIncrement
+     */
     public void doTemperatureIncrement (double tempIncrement) {
         temperature += tempIncrement;
     }

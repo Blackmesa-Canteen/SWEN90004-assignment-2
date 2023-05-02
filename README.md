@@ -8,6 +8,10 @@
 ## 2 Overview
 A Java replicate for the *Daisy DaisyWorld (Biology)* NetLogo model.
 
+### Model design
+![](./doc/sys_design.png)
+
+
 ## 3 Build & Run
 1. Go to terminal, cd to the current project dir, execute `javac *.java` to compile;
 2. Check & modify parameter file `./params.properties` if needed;

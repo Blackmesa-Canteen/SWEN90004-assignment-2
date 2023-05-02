@@ -18,7 +18,9 @@ public class Daisy implements Turtle{
     private final boolean isDebugMode =
             ParamsUtil.getParam(Params.DEBUG_MODE, Boolean.class);
 
+    // Console display note
     private final Character note;
+
     private final Constants.Color color;
 
     private final Double albedo;
@@ -94,7 +96,8 @@ public class Daisy implements Turtle{
     public void onCreat() {
         isDead = false;
         if (isDebugMode) {
-            System.out.format("Daisy [%s] was created with color [%s] and albedo [%s].\n",
+            System.out.format("Daisy [%s] was created with color [%s] " +
+                            "and albedo [%s].\n",
                     id.substring(0,8),
                     color,
                     albedo
@@ -102,6 +105,9 @@ public class Daisy implements Turtle{
         }
     }
 
+    /**
+     * update daisy state in a tick
+     */
     @Override
     public void onStateUpdate() {
         // check logic error
@@ -121,6 +127,10 @@ public class Daisy implements Turtle{
             onDestroy();
         }
     }
+
+    /**
+     * destroy daisy
+     */
     @Override
     public void onDestroy() {
         if (!isDead) {
