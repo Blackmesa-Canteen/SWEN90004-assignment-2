@@ -11,7 +11,7 @@ public interface Constants {
     enum Color {
         /* Black daisy color, and console display note */
         BLACK("black", 'B'),
-        /* Mutant daisy color, and console display note */
+        /* While daisy color, and console display note */
         WHITE("white", 'W'),
         /* Mutant daisy color, and console display note */
         OTHER("other", 'X');
