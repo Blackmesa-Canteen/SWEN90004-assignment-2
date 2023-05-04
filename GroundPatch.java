@@ -18,6 +18,9 @@ public class GroundPatch implements Patch {
     private final boolean isDebugMode =
             ParamsUtil.getParam(Params.DEBUG_MODE, Boolean.class);
 
+    private final boolean isExtensionEnabled =
+            ParamsUtil.getParam(Params.ENABLE_EXTENSION, Boolean.class);
+
     private final char note;
 
     private final DaisyWorld world;
@@ -68,8 +71,8 @@ public class GroundPatch implements Patch {
      */
     public void updateTempBySolarLuminosity() {
         // update temps and so on
-        double absorbedLuminosity = 0;
-        double localHeating = 0;
+        double absorbedLuminosity;
+        double localHeating;
 
         if (daisy == null) {
             absorbedLuminosity = (1 - albedoOfGround) * world.getSolarLuminosity();
@@ -89,10 +92,10 @@ public class GroundPatch implements Patch {
 
     /**
      * Update patch temperature by Diffuse neighbors.
-     *
+     * </br>
      * Tells each patch to give equal shares of (number * 100) percent of
      * the value of patch-variable to its eight neighboring patches.
-     *
+     * </br>
      * number should be between 0 and 1. Regardless of topology the sum of patch
      * will be conserved across the world. (If a patch has fewer than 8 neighbors,
      * each neighbor still gets an 8 share; the patch keeps any leftover shares.)
@@ -150,18 +153,60 @@ public class GroundPatch implements Patch {
                                         randomObj.nextInt(neighbourSize)
                                 );
 
-                        // create a new daisy on the neighbor with my daisy's color
-                        theRandomEmptyNeighbour.setDaisy(
-                                new Daisy(
-                                        theRandomEmptyNeighbour,
-                                        this.daisy.getColor(),
-                                        0
-                                )
-                        );
+                        // check extension enabled or not
+                        if (!isExtensionEnabled) {
+                            // if runs original model
+                            // create a new daisy on the neighbor with my daisy's color
+                            theRandomEmptyNeighbour.setDaisy(
+                                    new Daisy(
+                                            theRandomEmptyNeighbour,
+                                            this.daisy.getColor(),
+                                            0
+                                    )
+                            );
+                        } else {
+                            // if runs extension model
+                            reproduceMutantDaisies(randomObj, theRandomEmptyNeighbour);
+                        }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Handles mutant daisy reproduction
+     */
+    private void reproduceMutantDaisies(Random randomObj, GroundPatch theRandomEmptyNeighbour) {
+        // if the current daisy is not mutant, offsprings may be mutant
+        if (!this.daisy.getColor().equals(Constants.Color.OTHER)) {
+            Double mutantProb = ParamsUtil.getParam(
+                    Params.MUTANT_DAISY_PROB, Double.class
+            );
+            boolean geneMutationTriggered = randomObj.nextDouble() < mutantProb;
+            if (geneMutationTriggered) {
+                // create a mutant daisy with mutant color
+                theRandomEmptyNeighbour.setDaisy(
+                        new Daisy(
+                                theRandomEmptyNeighbour,
+                                Constants.Color.OTHER,
+                                0
+                        )
+                );
+
+                // End the current process
+                return;
+            }
+        }
+        // If already mutant, or if not mutant but gene mutation not triggered:
+        // create a new daisy with original color
+        theRandomEmptyNeighbour.setDaisy(
+                new Daisy(
+                        theRandomEmptyNeighbour,
+                        this.daisy.getColor(),
+                        0
+                )
+        );
     }
 
     @Override
@@ -269,7 +314,7 @@ public class GroundPatch implements Patch {
 
     /**
      * Set temperature of current patch
-     * @param tempIncrement
+     * @param tempIncrement increased temperature
      */
     public void doTemperatureIncrement (double tempIncrement) {
         temperature += tempIncrement;

@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -13,11 +15,20 @@ import java.util.*;
  */
 public class DaisyWorld implements Observer {
 
+    // enable extension mode or not
+    private final boolean isExtensionEnabled =
+            ParamsUtil.getParam(Params.ENABLE_EXTENSION, Boolean.class);
+
     // global average temp
     private Double globalTemp;
 
     // current solar luminosity
     private Double solarLuminosity;
+
+    private final boolean isSolarLuminosityRamp = ParamsUtil.getParam(
+            Params.IS_SOLAR_LUMINOSITY_RAMP,
+            Boolean.class
+    );
 
     // least delays between ticks
     private final Long delayMs;
@@ -75,7 +86,13 @@ public class DaisyWorld implements Observer {
     @Override
     public void onInit() {
         // create csv file head
-        FileUtil.writeStringToResultFile(Constants.CSV_FILE_HEAD);
+        if (!isExtensionEnabled) {
+            // original model head
+            FileUtil.writeStringToResultFile(Constants.CSV_FILE_HEAD);
+        } else {
+            // if extension mode is enabled, add extension head
+            FileUtil.writeStringToResultFile(Constants.CSV_FILE_HEAD_EXTENSION);
+        }
 
         // init business logic
         globalTemp = ParamsUtil.getParam(Params.INIT_GLOBAL_TEMP, Double.class);
@@ -134,6 +151,27 @@ public class DaisyWorld implements Observer {
                 Thread.sleep(delayMs);
             }
             tickCount++;
+
+            // ramp-up-ramp-down logic from NetLogo code
+            if (isSolarLuminosityRamp) {
+                if (tickCount > 200 && tickCount <= 400) {
+                    solarLuminosity =
+                            new BigDecimal(solarLuminosity + 0.005)
+                                    .setScale(4,
+                                            RoundingMode.HALF_UP
+                                    )
+                                    .doubleValue();
+                }
+
+                if (tickCount > 600 && tickCount <= 850) {
+                    solarLuminosity =
+                            new BigDecimal(solarLuminosity - 0.0025)
+                                    .setScale(4,
+                                            RoundingMode.HALF_UP
+                                    )
+                                    .doubleValue();
+                }
+            }
         }
     }
 
@@ -157,11 +195,10 @@ public class DaisyWorld implements Observer {
 
         int whitePopulation = 0;
         int blackPopulation = 0;
+        int mutantPopulation = 0;
         int totalPopulation = 0;
 
-        consoleSb.append(
-                String.format("============ Start of the world state ============\n")
-        );
+        consoleSb.append("============ Start of the world state ============\n");
 
         // sample each patches
         for (int y = 0; y < height; y++) {
@@ -173,11 +210,15 @@ public class DaisyWorld implements Observer {
                 if (theDaisy != null && !theDaisy.isDead()) {
 
                     // calc daisy population
-                    if (theDaisy.getColor().equals(Constants.Color.WHITE)) {
-                        whitePopulation++;
-                    } else if (theDaisy.getColor().equals(Constants.Color.BLACK)) {
-                        blackPopulation++;
+                    switch (theDaisy.getColor()) {
+                        case WHITE -> whitePopulation++;
+                        case BLACK -> blackPopulation++;
+                        case OTHER -> mutantPopulation++;
+                        default -> throw new RuntimeException(
+                                "Unknown daisy color while displaying!"
+                        );
                     }
+
                     totalPopulation++;
 
                     if (displayWorld) {
@@ -228,16 +269,21 @@ public class DaisyWorld implements Observer {
         );
         fileSb.append(blackPopulation).append(",");
 
+        // if extension enabled, show mutant population info
+        if (isExtensionEnabled) {
+            consoleSb.append(
+                    String.format("Mutant daisy population number: %s; \n",
+                            mutantPopulation)
+            );
+            fileSb.append(mutantPopulation).append(",");
+        }
 
         consoleSb.append(
                 String.format("Daisy total population number: %s.\n",
                         totalPopulation)
         );
 
-        consoleSb.append(
-                String.format("============ End of the world state ============\n",
-                        totalPopulation)
-        );
+        consoleSb.append("============ End of the world state ============\n");
 
         fileSb.append(totalPopulation);
         fileSb.append('\n');

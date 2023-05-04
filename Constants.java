@@ -9,12 +9,17 @@
 public interface Constants {
     // daisy colors
     enum Color {
-        BLACK("black", 'B'), WHITE("white", 'W');
+        /* Black daisy color, and console display note */
+        BLACK("black", 'B'),
+        /* Mutant daisy color, and console display note */
+        WHITE("white", 'W'),
+        /* Mutant daisy color, and console display note */
+        OTHER("other", 'X');
 
         private final String name;
         private final char note;
 
-        private Color(String name, char note) {
+        Color(String name, char note) {
             this.name = name;
             this.note = note;
         }
@@ -42,6 +47,10 @@ public interface Constants {
     String CSV_FILE_HEAD =
             "tick-count,solar-luminosity,global-temp," +
                     "white-population,black-population,total-population\n";
+
+    String CSV_FILE_HEAD_EXTENSION =
+            "tick-count,solar-luminosity,global-temp," +
+                    "white-population,black-population,mutant-population,total-population\n";
 
     // Bare ground Patch Node
     Character GROUND_PATCH_NOTE = '_';

@@ -28,16 +28,28 @@ public class Daisy implements Turtle{
     private final long maxAge;
     private long currentAge;
 
-    private GroundPatch groundPatch;
+    private final GroundPatch groundPatch;
 
     private boolean isDead;
 
     public Daisy(GroundPatch groundPatch, Constants.Color color) {
         id = UUID.randomUUID().toString();
         this.color = color;
-        albedo = color.equals(Constants.Color.WHITE) ?
-                ParamsUtil.getParam(Params.ALBEDO_OF_WHITES, Double.class) :
-                ParamsUtil.getParam(Params.ALBEDO_OF_BLACKS, Double.class);
+        switch (color) {
+            case WHITE -> albedo = ParamsUtil.getParam(
+                    Params.ALBEDO_OF_WHITES,
+                    Double.class);
+            case BLACK -> albedo = ParamsUtil.getParam(
+                    Params.ALBEDO_OF_BLACKS,
+                    Double.class);
+            case OTHER -> albedo = ParamsUtil.getParam(
+                    Params.ALBEDO_OF_MUTANTS,
+                    Double.class
+            );
+            default -> throw new RuntimeException(
+                    "Daisy color-albedo pair not defined!"
+            );
+        }
         note = color.getNote();
         this.groundPatch = groundPatch;
         // random start age, according to original model
@@ -55,9 +67,21 @@ public class Daisy implements Turtle{
     public Daisy(GroundPatch groundPatch, Constants.Color color, long initAge) {
         id = UUID.randomUUID().toString();
         this.color = color;
-        albedo = color.equals(Constants.Color.WHITE) ?
-                ParamsUtil.getParam(Params.ALBEDO_OF_WHITES, Double.class) :
-                ParamsUtil.getParam(Params.ALBEDO_OF_BLACKS, Double.class);
+        switch (color) {
+            case WHITE -> albedo = ParamsUtil.getParam(
+                    Params.ALBEDO_OF_WHITES,
+                    Double.class);
+            case BLACK -> albedo = ParamsUtil.getParam(
+                    Params.ALBEDO_OF_BLACKS,
+                    Double.class);
+            case OTHER -> albedo = ParamsUtil.getParam(
+                    Params.ALBEDO_OF_MUTANTS,
+                    Double.class
+            );
+            default -> throw new RuntimeException(
+                    "Daisy color-albedo pair not defined!"
+            );
+        }
         note = color.getNote();
         this.groundPatch = groundPatch;
         // random start age, according to original model
@@ -154,7 +178,6 @@ public class Daisy implements Turtle{
      * NOTE: turtle coordinate is simplified to be the same
      *  as the located patch's according to project.
      *  So deprecated for daisy
-     * @return
      */
     @Override
     @Deprecated
