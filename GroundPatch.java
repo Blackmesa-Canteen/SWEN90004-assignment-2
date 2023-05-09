@@ -166,7 +166,7 @@ public class GroundPatch implements Patch {
                             );
                         } else {
                             // if runs extension model
-                            reproduceMutantDaisies(randomObj, theRandomEmptyNeighbour);
+                            reproduceMutantDaisies(theRandomEmptyNeighbour);
                         }
                     }
                 }
@@ -177,7 +177,8 @@ public class GroundPatch implements Patch {
     /**
      * Handles mutant daisy reproduction
      */
-    private void reproduceMutantDaisies(Random randomObj, GroundPatch theRandomEmptyNeighbour) {
+    private void reproduceMutantDaisies(GroundPatch theRandomEmptyNeighbour) {
+        Random randomObj = new SecureRandom();
         // if the current daisy is not mutant, offsprings may be mutant
         if (!this.daisy.getColor().equals(Constants.Color.OTHER)) {
             Double mutantProb = ParamsUtil.getParam(
@@ -197,9 +198,21 @@ public class GroundPatch implements Patch {
                 // End the current process
                 return;
             }
+        } else {
+            // If current daisy is a mutant, check whether it can reproduce
+            Double mutantReproduceProb = ParamsUtil.getParam(
+                    Params.MUTANT_REPRODUCE_PROB,
+                    Double.class
+            );
+            boolean canMutantReproduce = randomObj.nextDouble() < mutantReproduceProb;
+
+            if (!canMutantReproduce) {
+                // if the mutant can not reproduce for now, stop the reproduce attempt
+                return;
+            }
         }
-        // If already mutant, or if not mutant but gene mutation not triggered:
-        // create a new daisy with original color
+
+        // reproduce a new daisy with original color
         theRandomEmptyNeighbour.setDaisy(
                 new Daisy(
                         theRandomEmptyNeighbour,

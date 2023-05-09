@@ -38,5 +38,6 @@ public interface Params {
     /* Extension related param names */
     String ENABLE_EXTENSION = "enable-extension";
     String MUTANT_DAISY_PROB = "mutant-daisy-prob";
+    String MUTANT_REPRODUCE_PROB = "mutant-reproduce-prob";
     String ALBEDO_OF_MUTANTS = "albedo-of-mutants";
 }
