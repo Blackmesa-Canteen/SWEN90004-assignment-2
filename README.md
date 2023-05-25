@@ -17,7 +17,9 @@ A Java replicate for the *Daisy DaisyWorld (Biology)* NetLogo model.
 2. Check & modify parameter file `./params.properties` if needed;
 3. Run the model with `java Main`;
 4. See the runtime result `.csv` files from `./data` directory;
-5. Execute `rm *.class` to clean compiled artifacts.
+5. Change the parameter file `./params.properties` to do more experiments, 
+   and repeat step 3 & 4. No need to recompile source codes;
+6. Finished. Then execute `rm *.class` to clean compiled artifacts.
 
 ## 4 License
 This is a curriculum project from the University of Melbourne. 
