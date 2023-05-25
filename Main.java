@@ -14,7 +14,10 @@
  * </br>
  * 4. See the experiment result `.csv` files from `./data` directory;
  * </br>
- * 5. Execute `rm *.class` to clean compiled artifacts.
+ * 5. Change the parameter file ./params.properties to do more experiments,
+ * and repeat step 3 & 4. No need to recompile source codes;
+ * </br>
+ * 6. If finished, then execute `rm *.class` to clean compiled artifacts.
  * </div>
  *
  * @author Xiaotian LI
@@ -25,7 +28,6 @@
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("hello world");
         Observer daisyWorld = new DaisyWorld();
         daisyWorld.onInit();
         daisyWorld.onGoing();

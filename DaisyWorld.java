@@ -85,6 +85,7 @@ public class DaisyWorld implements Observer {
      */
     @Override
     public void onInit() {
+        System.out.println("hello world");
         // create csv file head
         if (!isExtensionEnabled) {
             // original model head
