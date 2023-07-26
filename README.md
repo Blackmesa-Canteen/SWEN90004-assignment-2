@@ -1,5 +1,15 @@
 # SWEN90004: Modelling Complex Software Systems Assignment 2
 
+## Intro
+
+**Full mark** Assignment 2: Replicate a complex model in Java from Modelling Complex Software Systems (SWEN90004_2023_SM1) @ the University of Melbourne.
+
+If you found it helpful, please give us a star.
+
+While you refering to the repo, make sure you are following regulations from the unimelb:
+
+*By submitting work for assessment I hereby declare that I understand the University’s policy on academic integrity and statement on the use of artificial intelligence software. In accordance with these documents, I declare that the work submitted is original and solely my work, and that I have not been assisted by a third party (collusion) apart from where the submitted work is for a designated collaborative task, in which case the individual contributions are indicated. I also declare that I have not used any writing tools or sources without proper acknowledgment (plagiarism). Where the submitted work is a computer program or code, I further declare that any copied code is declared in comments identifying the source at the start of the program or in a header file, that comments inline identify the start and end of the copied code, and that any modifications to code sources elsewhere are commented upon as to the nature of the modification.*
+
 ## 1 Author
 - Xiaotian LI 1141181
 - Junrong WU
