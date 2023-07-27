@@ -4,11 +4,21 @@
 
 **Full mark** Assignment 2: Replicate a complex model in Java from Modelling Complex Software Systems (SWEN90004_2023_SM1) @ the University of Melbourne.
 
+**It can also visualize the experiment result in the console!**
+
 If you found it helpful, please give us a star.
 
 While you refering to the repo, make sure you are following regulations from the unimelb:
 
 *By submitting work for assessment I hereby declare that I understand the University’s policy on academic integrity and statement on the use of artificial intelligence software. In accordance with these documents, I declare that the work submitted is original and solely my work, and that I have not been assisted by a third party (collusion) apart from where the submitted work is for a designated collaborative task, in which case the individual contributions are indicated. I also declare that I have not used any writing tools or sources without proper acknowledgment (plagiarism). Where the submitted work is a computer program or code, I further declare that any copied code is declared in comments identifying the source at the start of the program or in a header file, that comments inline identify the start and end of the copied code, and that any modifications to code sources elsewhere are commented upon as to the nature of the modification.*
+## 0 Description
+>Your task is to replicate an existing grid-based NetLogo model in Java or Python, perform
+experiments to verify that its behaviour matches that of the original model, adapt your model
+to answer a new research question, and prepare a report on your findings. It is expected that
+you will work on this Assignment in groups of three. You should establish groups as soon as
+possible (using your contacts or the Canvas Discussion Board).
+
+The project selected `Daisy World (Biology)` as the topic. Daisyworld, a computer simulation, is a hypothetical world orbiting a star whose radiant energy is slowly increasing or decreasing. It is meant to mimic important elements of the Earth-Sun system, and was introduced by James Lovelock and Andrew Watson in a paper published in 1983[1] to illustrate the plausibility of the Gaia hypothesis. In the original 1983 version, Daisyworld is seeded with two varieties of daisy as its only life forms: black daisies and white daisies. White petaled daisies reflect light, while black petaled daisies absorb light. The simulation tracks the two daisy populations and the surface temperature of Daisyworld as the sun's rays grow more powerful. The surface temperature of Daisyworld remains almost constant over a broad range of solar output.
 
 ## 1 Author
 - Xiaotian LI 1141181
